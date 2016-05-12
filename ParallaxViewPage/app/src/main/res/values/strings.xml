@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">ParallaxViewPage</string>
 
-    <string name="text_content_intro_1">Text with your\nMindoula.</string>
-    <string name="text_content_intro_2">Check in with us\neffortlessly…</string>
-    <string name="text_content_intro_3">…and track your\nprogress.</string>
-    <string name="text_content_intro_4">Everything is\nconfidential.</string>
+    <string name="text_content_intro_1">Lorem ipsum \ndolor sit amet.</string>
+    <string name="text_content_intro_2">Lorem Ipsum is not \nsimply random text…</string>
+    <string name="text_content_intro_3">…it has survived not only \nfive centuries.</string>
+    <string name="text_content_intro_4">more recently with desktop \npublishing software.</string>
 </resources>
