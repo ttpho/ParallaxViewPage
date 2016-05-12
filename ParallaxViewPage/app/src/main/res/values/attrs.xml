@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="PTPageView">
+        <attr name="currentPageIndicatorTintColor" format="color" />
+        <attr name="pageIndicatorTintColor" format="color" />
+        <attr name="heightItem" format="float" />
+        <attr name="numberOfPages" format="integer" />
+        <attr name="widthItem" format="float" />
+    </declare-styleable>
+</resources>
