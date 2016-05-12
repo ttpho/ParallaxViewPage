@@ -1,107 +1,136 @@
 package photran.me.parallaxviewpage;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-public class IntroActivity extends AppCompatActivity {
+import java.util.HashMap;
+
+import photran.me.parallaxviewpage.views.PTPageView;
+import photran.me.parallaxviewpage.views.ParallaxPageTransformer;
+
+
+public class IntroActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
+
+    private final float xChangeText = 1.0f;//-10.0f;
+    private final float xChangeImage = 2.0f;//4.0f;
+
+    private final int NUM_PAGE = 4;
+    private final int[] TEXT_CONTENT_HEADER_PAGES = {
+            R.string.text_content_intro_1,
+            R.string.text_content_intro_2,
+            R.string.text_content_intro_3,
+            R.string.text_content_intro_4,
+    };
+    private final int[] PHOTO_CONTENT_PAGES = {
+            R.drawable.intro_photo_1,
+            R.drawable.intro_photo_2,
+            R.drawable.intro_photo_3,
+            R.drawable.intro_photo_4
+    };
 
     private SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
+    private PTPageView mPtPageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(this);
 
-        // Set up the ViewPager with the sections adapter.
+        mPtPageView = (PTPageView) findViewById(R.id.ptpageview);
+        mPtPageView.setSize(NUM_PAGE);
+
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.addOnPageChangeListener(this);
+
+
+        ParallaxPageTransformer pageTransformer = new ParallaxPageTransformer()
+                .addViewToParallax(new ParallaxPageTransformer.ParallaxTransformInformation(R.id.txtTextContent, xChangeText, xChangeText));
+        pageTransformer.addViewToParallax(new ParallaxPageTransformer.ParallaxTransformInformation(R.id.imgPhotoContent, xChangeImage, xChangeImage));
+
+        mViewPager.setPageTransformer(true, pageTransformer);
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    }
 
-        public PlaceholderFragment() {
-        }
+    @Override
+    public void onPageSelected(int position) {
+        mPtPageView.setState(position);
+    }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public class SectionsPagerAdapter extends PagerAdapter {
+
+        private LayoutInflater inflater;
+        private Context mContext;
+        private HashMap<Integer, View> positionPageView;
+
+        public SectionsPagerAdapter(Context context) {
+            mContext = context;
+            inflater = LayoutInflater.from(mContext);
+            positionPageView = new HashMap<>();
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_intro, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
+        public Object instantiateItem(ViewGroup collection, int position) {
+            ViewGroup mLayout = (ViewGroup) inflater.inflate(getLayoutId(), collection, false);
+            collection.addView(mLayout);
+
+
+            TextView txtTextContent = (TextView) mLayout.findViewById(R.id.txtTextContent);
+            txtTextContent.setText(getTextContentPage(position));
+
+            ImageView imgPhotoContent = (ImageView) mLayout.findViewById(R.id.imgPhotoContent);
+            imgPhotoContent.setImageResource(getPhotoContentPage(position));
+
+            positionPageView.put(position, mLayout);
+
+            return mLayout;
         }
-    }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
+        private int getLayoutId() {
+            return R.layout.layout_intro_item;
         }
 
         @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            return NUM_PAGE;
+        }
+
+        public int getTextContentPage(int position) {
+            return TEXT_CONTENT_HEADER_PAGES[position];
+        }
+
+        public int getPhotoContentPage(int position) {
+            return PHOTO_CONTENT_PAGES[position];
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
-            }
-            return null;
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
         }
     }
 }

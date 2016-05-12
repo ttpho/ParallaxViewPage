@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:id="@+id/txtTextContent"
+        style="@style/page_view_text_style"
+        android:text="@string/text_content_intro_1" />
+
+    <ImageView
+        android:id="@+id/imgPhotoContent"
+        style="@style/page_view_photo_style"
+        android:layout_below="@+id/txtTextContent"
+        android:src="@drawable/intro_photo_1" />
+
+</RelativeLayout>
