@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -33,4 +33,13 @@
         <item name="android:layout_marginBottom">48dp</item>
     </style>
 
+
+    <style name="page_view_button_skip_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:textColor">@drawable/text_color_btn_skip</item>
+        <item name="android:background">@drawable/bg_color_btn_skip</item>
+        <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
+    </style>
 </resources>
