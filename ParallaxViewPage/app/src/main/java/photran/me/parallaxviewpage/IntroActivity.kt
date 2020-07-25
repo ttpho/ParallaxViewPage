@@ -51,8 +51,8 @@ class IntroActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
                 .addViewToParallax(ParallaxPageTransformer.ParallaxTransformInformation(R.id.txtTextContent, xChangeText, xChangeText))
                 .addViewToParallax(ParallaxPageTransformer.ParallaxTransformInformation(R.id.imgPhotoContent, xChangeImage, xChangeImage))
 
-        ptPageView = (findViewById<View>(R.id.ptpageview) as PTPageView).also {
-            it.size = NUM_PAGE
+        ptPageView = (findViewById<View>(R.id.ptpageview) as? PTPageView)?.also {
+            it.setSize(NUM_PAGE)
         }
 
         (findViewById<View>(R.id.container) as? ViewPager)?.let {
@@ -80,7 +80,7 @@ class IntroActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
     }
 
     override fun onPageSelected(position: Int) {
-        ptPageView?.state = position
+        ptPageView?.setState(position)
         btnSkip?.visibility = if (position == NUM_PAGE - 1) View.VISIBLE else View.INVISIBLE
     }
 
@@ -94,11 +94,11 @@ class IntroActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
         override fun instantiateItem(collection: ViewGroup, position: Int): Any {
             val view = inflater.inflate(R.layout.layout_intro_item, collection, false)
             collection.addView(view)
-            (view.findViewById<View>(R.id.imgPhotoContent) as ImageView)
-                    .setImageResource(getPhotoContentPage(position))
-            positionPageTextView[position] = (view.findViewById<View>(R.id.txtTextContent) as TextView).also {
+            (view.findViewById<View>(R.id.imgPhotoContent) as? ImageView)
+                    ?.setImageResource(getPhotoContentPage(position))
+            positionPageTextView[position] = (view.findViewById<View>(R.id.txtTextContent) as? TextView)?.also {
                 it.setText(getTextContentPage(position))
-            }
+            } ?: return view
 
             return view
         }
@@ -109,9 +109,7 @@ class IntroActivity : AppCompatActivity(), ViewPager.OnPageChangeListener {
 
         override fun getCount() = NUM_PAGE
 
-        override fun isViewFromObject(view: View, objectAny: Any): Boolean {
-            return view === objectAny
-        }
+        override fun isViewFromObject(view: View, objectAny: Any) = view === objectAny
 
         private fun getTextContentPage(position: Int) = TEXT_CONTENT_HEADER_PAGES[position]
 

@@ -1,6 +1,9 @@
 package photran.me.parallaxviewpage.views;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.View;
 
 import java.util.ArrayList;
@@ -15,62 +18,50 @@ import java.util.List;
  */
 public class ParallaxPageTransformer implements ViewPager.PageTransformer {
 
+    @NonNull
     private List<ParallaxTransformInformation> mViewsToParallax
-            = new ArrayList<ParallaxTransformInformation>();
+            = new ArrayList<>();
 
     public ParallaxPageTransformer() {
     }
 
-    public ParallaxPageTransformer(List<ParallaxTransformInformation> viewsToParallax) {
-        mViewsToParallax = viewsToParallax;
-    }
-
-    public ParallaxPageTransformer addViewToParallax(ParallaxTransformInformation viewInfo) {
-        if (mViewsToParallax != null) {
-            mViewsToParallax.add(viewInfo);
-        }
+    public ParallaxPageTransformer addViewToParallax(@Nullable final List<ParallaxTransformInformation> viewsToParallax) {
+        if (viewsToParallax == null || viewsToParallax.isEmpty()) return this;
+        mViewsToParallax.addAll(viewsToParallax);
         return this;
     }
 
-    public void transformPageTest(View view, float position) {
-        int pageWidth = view.getWidth();
+    public ParallaxPageTransformer addViewToParallax(ParallaxTransformInformation viewInfo) {
+        if (viewInfo == null) return this;
+        mViewsToParallax.add(viewInfo);
+        return this;
+    }
+
+    @Override
+    public void transformPage(@NonNull final View view, final float position) {
+        if (!(-1 <= position && position <= 1)) return;
+        final int pageWidth = view.getWidth();
         for (ParallaxTransformInformation parallaxTransformInformation : mViewsToParallax) {
-            applyParallaxEffect(view, 0.0f, pageWidth, parallaxTransformInformation,
+            applyParallaxEffect(view, position, pageWidth, parallaxTransformInformation,
                     position > 0);
         }
     }
 
-    @Override
-    public void transformPage(View view, float position) {
+    private void applyParallaxEffect(@NonNull final View view,
+                                     final float position,
+                                     final int pageWidth,
+                                     @NonNull final ParallaxTransformInformation information,
+                                     final boolean isEnter) {
 
-        int pageWidth = view.getWidth();
-        if (position < -1) {
-            // This page is way off-screen to the left.
-//            ViewHelper.setAlpha(view, 1);
-//
-        } else if (position <= 1 && mViewsToParallax != null) { // [-1,1]
-            for (ParallaxTransformInformation parallaxTransformInformation : mViewsToParallax) {
-                applyParallaxEffect(view, position, pageWidth, parallaxTransformInformation,
-                        position > 0);
-            }
-
-        } else {
-            // This page is way off-screen to the right.
-            //  ViewHelper.setAlpha(view, 1);
+        if (!(information.isValid() && view.findViewById(information.resource) != null)) {
+           return;
         }
-    }
-
-    private void applyParallaxEffect(View view, float position, int pageWidth, ParallaxTransformInformation information, boolean isEnter) {
-
-        if (information.isValid() && view.findViewById(information.resource) != null) {
-            View viewRes = view.findViewById(information.resource);
-            if (isEnter && !information.isEnterDefault()) {
-                if (viewRes != null)
-                    viewRes.setTranslationX(position * (pageWidth / information.parallaxEnterEffect));
-            } else if (!isEnter && !information.isExitDefault()) {
-                if (viewRes != null)
-                    viewRes.setTranslationX(position * (pageWidth / information.parallaxExitEffect));
-            }
+        final View viewRes = view.findViewById(information.resource);
+        if (viewRes == null) return;
+        if (isEnter && !information.isEnterDefault()) {
+            viewRes.setTranslationX(position * (pageWidth / information.parallaxEnterEffect));
+        } else if (!isEnter && !information.isExitDefault()) {
+            viewRes.setTranslationX(position * (pageWidth / information.parallaxExitEffect));
         }
     }
 
@@ -85,12 +76,13 @@ public class ParallaxPageTransformer implements ViewPager.PageTransformer {
 
         public static final float PARALLAX_EFFECT_DEFAULT = -101.1986f;
 
-        int resource = -1;
-        float parallaxEnterEffect = 1f;
-        float parallaxExitEffect = 1f;
+        int resource;
+        float parallaxEnterEffect;
+        float parallaxExitEffect;
 
-        public ParallaxTransformInformation(int resource, float parallaxEnterEffect,
-                                            float parallaxExitEffect) {
+        public ParallaxTransformInformation(final int resource,
+                                            final float parallaxEnterEffect,
+                                            final float parallaxExitEffect) {
             this.resource = resource;
             this.parallaxEnterEffect = parallaxEnterEffect;
             this.parallaxExitEffect = parallaxExitEffect;

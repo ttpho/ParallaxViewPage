@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ParallaxViewPage.iml" filepath="$PROJECT_DIR$/ParallaxViewPage.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ParallaxViewPage-ParallaxViewPage.iml" filepath="$PROJECT_DIR$/.idea/modules/ParallaxViewPage-ParallaxViewPage.iml" group="ParallaxViewPage" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ParallaxViewPage-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ParallaxViewPage-app.iml" group="ParallaxViewPage/app" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
